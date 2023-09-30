@@ -1,0 +1,22 @@
+{
+  "name": "graphql_exercise1",
+  "version": "1.0.0",
+  "description": "graphql exercises",
+  "main": "index.js",
+  "scripts": {
+      "start": "nodemon index.js"
+  },
+  "keywords": [
+    "graphql"
+  ],
+  "author": "Hasan Öcal",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@apollo/server": "^4.9.3",
+    "graphql": "^16.8.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
