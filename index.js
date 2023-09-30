@@ -18,6 +18,7 @@ type User {
   id: ID!
   username: String!
   email: String!
+  events: [Event]
 }
 
 type Event {
@@ -49,27 +50,66 @@ type Participant {
 }
 
 type Query {
-  users: [User!]!
-  user(id: ID!): User!
+  users: [User]
+  user(id: Int): User
 
-  events: [Event!]!
-  event(id: ID!): Event
+  events: [Event]
+  event(id: Int): Event
 
-  locations: [Location!]!
-  location(id: ID!): Location!
+  locations: [Location]
+  location(id: Int): Location
 
-  participants: [Participant!]!
-  participant(id: ID!): Participant
+  participants: [Participant]
+  participant(id: Int): Participant
 }
 `;
 
 const resolvers = {
     Query: {
+      
       users: () => db.users,
+      user: (parent, args) => {
+        const data = db.users.find((user) => user.id === args.id);
+        return data;
+      },
+      
       events: () => db.events,
+      event: (parent, args) => {
+        const data = db.events.find(event => event.id === args.id)
+        return data
+      }, 
+      
       locations: () => db.locations,
+      location: (parent, args) => {
+        const data = db.locations.find(location => location.id === args.id)
+        return data
+      }, 
+      
       participants: () => db.participants,
+      participant: (parent, args) => {
+        const data = db.participants.find(participant => participant.id === args.id)
+        return data
+      }, 
     },
+    
+    User:{
+      events:(parent)=> db.events.filter(event => event.user_id == parent.id)
+    },
+
+    Event: {
+      user: (parent) => {
+        return db.users.find(user => user.id === parent.user_id)
+      },
+
+      location: (parent) => {
+        return db.locations.find(location => location.id === parent.location_id)
+      },
+      
+      participants: (parent) => {
+        return db.participants.filter(participant => participant.user_id === parent.user_id)
+      },
+    }
+
 };
 
 const server = new ApolloServer({
